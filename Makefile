@@ -1,33 +1,14 @@
-REBAR = rebar
-DIALYZER = dialyzer
+# Project
 
-DIALYZER_WARNINGS = -Wunmatched_returns -Werror_handling \
-                    -Wrace_conditions -Wunderspecs
+PROJECT = poolboy
 
-.PHONY: all compile test qc clean get-deps build-plt dialyze
+# Options
 
-all: compile
+PLT_APPS = kernel stdlib
 
-compile:
-	@$(REBAR) compile
+# Dependencies
 
-test: compile
-	@$(REBAR) eunit skip_deps=true
+# Targets
 
-qc: compile
-	@$(REBAR) qc skip_deps=true
+include erlang.mk
 
-clean:
-	@$(REBAR) clean
-
-get-deps:
-	@$(REBAR) get-deps
-
-.dialyzer_plt:
-	@$(DIALYZER) --build_plt --output_plt .dialyzer_plt \
-	    --apps kernel stdlib
-
-build-plt: .dialyzer_plt
-
-dialyze: build-plt
-	@$(DIALYZER) --src src --plt .dialyzer_plt $(DIALYZER_WARNINGS)
